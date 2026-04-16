@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<FindBugsFilter>
+    <!-- Exclude MS_EXPOSE_REP for singleton getInstance methods -->
+    <Match>
+        <Class name="de.kremerdaniel.openfoamcut.controller.ArrangeController"/>
+        <Method name="getInstance"/>
+        <Bug pattern="MS_EXPOSE_REP"/>
+    </Match>
+    <Match>
+        <Class name="de.kremerdaniel.openfoamcut.controller.CutOrderController"/>
+        <Method name="getInstance"/>
+        <Bug pattern="MS_EXPOSE_REP"/>
+    </Match>
+    <Match>
+        <Class name="de.kremerdaniel.openfoamcut.controller.GlobalController"/>
+        <Method name="getInstance"/>
+        <Bug pattern="LI_LAZY_INIT_STATIC"/>
+    </Match>
+    <!-- Exclude EI_EXPOSE_REP2 for GCodeResult constructor - DTO object -->
+    <Match>
+        <Class name="de.kremerdaniel.openfoamcut.cutting.GCodeResult"/>
+        <Method name="&lt;init&gt;"/>
+        <Bug pattern="EI_EXPOSE_REP2"/>
+    </Match>
+</FindBugsFilter>

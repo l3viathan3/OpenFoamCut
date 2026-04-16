@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <style>
+    body {
+      font-family: sans-serif;
+      margin: 0;
+      padding: 20px;
+      display: flex;
+      justify-content: center;
+    }
+    table {
+      width: 70%;
+      max-width: 1000px;
+    }
+    h1 { color: #2a7ae2; margin-bottom: 10px; }
+    h2 { color: #2a7ae2; margin-top: 12px; margin-bottom: 6px; }
+    h3 { margin-top: 10px; margin-bottom: 4px; }
+    p { margin: 4px 0; }
+    ul { margin: 4px 0; padding-left: 30px; }
+    li { margin: 2px 0; }
+    ol { margin: 4px 0; padding-left: 30px; }
+    .tab-number { color: #2a7ae2; font-weight: bold; }
+    .code { font-family: monospace; background-color: #f0f0f0; padding: 2px 4px; }
+  </style>
+</head>
+<body>
+<table align="center" cellpadding="5">
+  <tr>
+    <td>
+      <h1>OpenFoamCut User Guide</h1>
+      
+      <h2>Welcome to OpenFoamCut</h2>
+      <p>OpenFoamCut is a desktop application for preparing cutting jobs on 4-axis CNC hot-wire foam cutters. This guide covers the complete workflow from loading profiles to generating G-code for your machine.</p>
+      
+      <h2>Basic Workflow</h2>
+      <p>The application is organized into four main tabs that guide you through the cutting job preparation:</p>
+      <ol>
+        <li><span class="tab-number">1. File Select &amp; Arrange</span> — Load outline files and position them on the foam block</li>
+        <li><span class="tab-number">2. Additional Geometry &amp; Cut Order</span> — Define cut sequences and synchronization points</li>
+        <li><span class="tab-number">3. Machine Setup</span> — Configure G-code templates and machine profiles</li>
+        <li><span class="tab-number">4. Generate G-Code</span> — Create and export the final cutting code</li>
+      </ol>
+      <p>The <span class="tab-number">Help</span> tab provides this reference guide.</p>
+
+      <h2>Supported File Formats</h2>
+      
+      <h3>Input Files</h3>
+      <ul>
+        <li><b>.dxf</b> — DXF outline files containing cutting profiles</li>
+        <li><b>.dat</b> — Airfoil/profile files in Selig or Lednicer format</li>
+      </ul>
+      <p><b>Important:</b> Profile files must contain exactly one closed outline (one "island") of connected lines. Files with multiple separate outlines or isolated lines will be rejected.</p>
+      
+      <h3>Output Files</h3>
+      <ul>
+        <li><b>.ofc</b> — OpenFoamCut project files that save your work session for later editing</li>
+        <li><b>.gc</b> — G-code files ready for CNC machine execution</li>
+      </ul>
+
+      <h2>Menu Options</h2>
+      
+      <h3>File Menu</h3>
+      <ul>
+        <li><b>Open (Ctrl+O)</b> — Load a previously saved .ofc project file</li>
+        <li><b>Save (Ctrl+S)</b> — Save the current project as an .ofc file</li>
+        <li><b>Exit (Ctrl+Q)</b> — Close the application and save the current state</li>
+      </ul>
+      
+      <h3>View Menu</h3>
+      <ul>
+        <li><b>Light Theme</b> — Switch to a light color scheme</li>
+        <li><b>Dark Theme</b> — Switch to a dark color scheme</li>
+      </ul>
+
+      <h2><span class="tab-number">Tab 1: File Select &amp; Arrange</span></h2>
+      <p>Use this tab to load outline files, define your foam block dimensions, and position the outlines for cutting. The working area displays live previews of the left and right outlines positioned on the foam block.</p>
+
+      <h3>A. Outline Files</h3>
+      <ul>
+        <li><b>Select Left File</b> — Click to browse and choose a .dxf or .dat file for the left outline</li>
+        <li><b>Select Right File</b> — Click to browse and choose a .dxf or .dat file for the right outline</li>
+        <li><b>Swap Left and Right</b> — Quickly exchange the left and right file selections</li>
+      </ul>
+      <p>The width and height dimensions of each loaded outline are displayed automatically.</p>
+
+      <h3>B. Foam Material</h3>
+      
+      <h4>I. Foam Block Dimensions</h4>
+      <ul>
+        <li><b>Height</b> — The vertical dimension of your foam block</li>
+        <li><b>Width</b> — The horizontal dimension of your foam block</li>
+        <li><b>Depth</b> — The thickness of your foam block (front to back)</li>
+      </ul>
+      <p>As you enter dimensions, the application automatically checks whether your outlines fit within the foam block and displays a message indicating fit status.</p>
+      
+      <h4>II. Foam Position</h4>
+      <ul>
+        <li><b>X offset from origin</b> — Shifts the entire foam block along the X axis relative to the machine origin</li>
+        <li><b>Offset from left wire anchor</b> — Sets the spacing between the foam block and the left-side wire anchor point</li>
+        <li><b>Offset from right wire anchor</b> — Sets the spacing between the foam block and the right-side wire anchor point</li>
+      </ul>
+
+      <h3>C. Outline Placement</h3>
+      
+      <h4>Left Outline &amp; Right Outline Positioning</h4>
+      <p>Each outline can be positioned independently using two methods:</p>
+      <ul>
+        <li><b>Arrow Buttons</b> — Fine-tune position with directional controls. Hover over buttons to see which direction and magnitude they adjust.</li>
+        <li><b>Direct Entry</b> — Set precise X and Y offset values numerically in the text fields labeled "Offset X" and "Offset Y"</li>
+      </ul>
+      <p>The preview on the left side of the screen shows both outlines as they will be positioned on the foam block.</p>
+
+      <h4>Outline Geometry Adjustments</h4>
+      <ul>
+        <li><b>Rotation</b> — Rotate each outline independently around its center point (in degrees)</li>
+        <li><b>Scale</b> — Scale each outline larger or smaller while maintaining proportions</li>
+      </ul>
+
+      <h4>Outline Angles (Foam Orientation)</h4>
+      <ul>
+        <li><b>Front Edge (deg)</b> — The angle of the wire at the front of the foam block relative to the machine origin</li>
+        <li><b>Back Edge (deg)</b> — The angle of the wire at the back of the foam block relative to the machine origin</li>
+      </ul>
+      <p>These angles control the taper or twist of the cut. If both angles are equal, the cut will be parallel (untapered). Different angles create a wedge or twisted shape.</p>
+
+      <h3>Preview Area</h3>
+      <p>The preview displays a top-down view of your foam block with the left and right outlines positioned on it. The red circle marks the machine origin point. Use this to verify your dimensions, positions, and angles are correct before proceeding to cut order configuration.</p>
+
+      <h2><span class="tab-number">Tab 2: Additional Geometry &amp; Cut Order</span></h2>
+      <p>After arranging your outlines, use this tab to define how the cutting will proceed. You can add additional geometry, define synchronization points between left and right sides, and establish the sequence of the cut.</p>
+
+      <h3>A. Arrange Lock</h3>
+      <p>The Lock Arrange checkbox controls access to Tab 1 (File Select &amp; Arrange) while you work on Tab 2. Locking is required before you can generate G-code.</p>
+      <ul>
+        <li><b>Lock Arrange</b> — After finalizing your outline positions in Tab 1, enable this checkbox. When locked, you <b>cannot</b> change outline files, rotation, or scale. However, you <b>can</b> still move outlines, configure foam settings, and swap outlines. All additional geometry you add (lines, sync points, cut order) will move together with outline adjustments.</li>
+      </ul>
+      <p><b>Unlocking:</b> If you unlock later, all additional geometry (lines, sync points, and cut order) will be deleted, but you regain the ability to edit outline files, rotation, and scale.</p>
+
+      <h3>B. Additional Geometry</h3>
+      <p>Add extra lines to your cutting pattern independent of the main outline. This is useful for internal cut paths, reinforcement lines, or guide marks.</p>
+
+      <h4>Adding Additional Lines</h4>
+      <ol>
+        <li>Click the <b>Add Line</b> button for the side (left or right) where you want to add a line</li>
+        <li>Click your desired start point on the outline display — a message will prompt you to select the start point</li>
+        <li>Click your desired end point on the outline display — the line is automatically added when you select the second point</li>
+      </ol>
+
+      <h4>Managing Additional Lines</h4>
+      <ul>
+        <li><b>List of Additional Lines</b> — Shows all lines you have added for each side</li>
+        <li><b>Remove Selected</b> — Delete a highlighted additional line from the list</li>
+      </ul>
+      <p>You can add multiple lines on both the left and right sides. This is useful for creating lead-in paths from the origin point to your main outlines, or for adding internal cut patterns.</p>
+
+      <h3>C. Synchronized Control Points</h3>
+      <p>Synchronization points define where the left and right wire anchors should meet at the same moment. This ensures proper alignment during the cut.</p>
+
+      <h4>Adding Synchronization Points</h4>
+      <ol>
+        <li>Click the <b>Add Sync Point</b> button to start the point selection process</li>
+        <li>Click your desired point on the left outline display — a message will prompt you to select the left point</li>
+        <li>Click the corresponding point on the right outline display — the synchronized pair is automatically created when you select the second point</li>
+      </ol>
+
+      <h4>Managing Synchronization Points</h4>
+      <ul>
+        <li><b>List of Synchronization Points</b> — Displays all synchronized point pairs you have created, with coordinates for both left and right sides</li>
+        <li><b>Remove Sync Point</b> — Select a point pair in the list and click this button to delete it</li>
+        <li><b>Highlighting</b> — When you select a sync point in the list, the corresponding points are highlighted with markers on both the left and right outline displays to help verify your setup</li>
+      </ul>
+
+      <h3>D. Cut Order Sequence</h3>
+      <p>Define the order in which synchronized points are reached during the cut. The G-code generator will travel along outlines and additional lines, stopping at each sync point in your cut order sequence.</p>
+
+      <h4>Essential Rules for Cut Order</h4>
+      <ul>
+        <li><b>Always start and end at the origin:</b> Your first and last sync point must be at the machine origin (0, 0). This ensures the wire anchors return to their home position.</li>
+        <li><b>Untraveled paths are preferred:</b> When moving between two sync points, the machine will prefer to travel along paths that have not yet been traversed.</li>
+        <li><b>Path selection:</b> If multiple untraveled segments are available, the upper path is preferred.</li>
+      </ul>
+
+      <h4>Cut Order Controls</h4>
+      <ul>
+        <li><b>Add to Cut Order</b> — Add a highlighted synchronization point to the sequence</li>
+        <li><b>Move Up / Move Down</b> — Adjust the order of points in the cut sequence</li>
+        <li><b>Remove from Cut Order</b> — Delete a point from the sequence</li>
+      </ul>
+
+      <h4>Example: Aircraft Wing Cutting</h4>
+      <p>A typical wing cutting setup includes:</p>
+      <ul>
+        <li><b>Outlines:</b> Left and right airfoil profiles representing the wing shape</li>
+        <li><b>Additional Lines:</b> On both left and right sides, click <b>Add Line</b> and select two points from origin (0, 0) to the tip of each airfoil outline. This ensures the wire can travel from the origin point to start cutting the airfoil.</li>
+        <li><b>Sync Points:</b> Define at least three pairs by clicking <b>Add Sync Point</b> and selecting the corresponding points on each side:
+          <ul>
+            <li>Origin point (0, 0) on both sides</li>
+            <li>Tip of airfoil (where the additional line meets the outline) on both sides</li>
+            <li>End of airfoil on both sides</li>
+          </ul>
+        </li>
+        <li><b>Cut Order Sequence:</b> Then in section D, add these sync points to the cut order in this sequence: origin → tip → end → tip → origin
+          <p>This sequence makes the wire travel: origin to tip (along the additional line), tip to end (along the outline), end back to tip (along the outline via untraveled path), and tip back to origin (along the additional line).</p>
+        </li>
+      </ul>
+
+      <h3>Preview Area</h3>
+      <p>The preview displays the left and right outlines with any additional geometry and synchronization points visible. Points are shown as markers; verify your cut path routing is correct, especially that untraveled segments exist between your sync points and that the sequence creates a valid cutting path before generating G-code.</p>
+
+      <h2><span class="tab-number">Tab 3: Machine Setup</span></h2>
+      <p>Configure your CNC machine parameters and create reusable machine profiles for different cutting jobs.</p>
+
+      <h3>A. Profiles</h3>
+      <p>Machine profiles store your G-code templates and settings so you can quickly switch between different machine configurations.</p>
+
+      <h4>Profile Management</h4>
+      <ul>
+        <li><b>Profile Dropdown</b> — Select a saved machine profile</li>
+        <li><b>Load</b> — Load the selected profile into the editor below</li>
+        <li><b>Profile Name</b> — Enter the name for a new profile</li>
+        <li><b>Save As</b> — Save the current G-code templates and settings under a new profile name</li>
+        <li><b>Delete</b> — Remove a selected profile</li>
+      </ul>
+
+      <h3>B. G-Code Templates</h3>
+      <p>Define the code that runs at the start, during each line move, and at the end of the cutting sequence. The template system allows you to customize output for your specific machine.</p>
+
+      <h4>Start Code</h4>
+      <p>G-code commands executed once at the beginning of the job. Typically includes machine initialization, spindle speed setup, or positioning commands.</p>
+
+      <h4>Line Code</h4>
+      <p>A template for each cutting line output during the job. Use placeholders to reference synchronized position data (coordinate details depend on your machine type).</p>
+
+      <h4>End Code</h4>
+      <p>G-code commands executed once at the end of the job. Typically includes spindle stop, machine park position, or shutdown commands.</p>
+
+      <h3>Information Section</h3>
+      <p>The hints area displays guidance on using the template system and available placeholders for your machine type.</p>
+
+      <h2><span class="tab-number">Tab 4: Generate G-Code</span></h2>
+      <p>Generate the final G-code and review it before saving to a file for machine execution.</p>
+
+      <h3>A. Generation and Preview</h3>
+      <ul>
+        <li><b>Generate</b> — Create G-code based on your current outline, cut order, and machine setup</li>
+        <li><b>Generate and Save</b> — Create G-code and immediately save it to a .gc file</li>
+        <li><b>Play/Pause Simulation</b> — Preview the cut path with an animated visualization</li>
+      </ul>
+
+      <h3>B. G-Code Output</h3>
+      <p>The text area displays the generated G-code. You can review the commands before saving. Copy text directly from this area if you need it elsewhere.</p>
+
+      <h3>C. Left and Right Previews</h3>
+      <p>The left and right preview panels show the actual cut path that will be followed by each wire. The red circle marks the starting anchor point for each side. Use these previews to verify the cut geometry is correct before running the job on your machine.</p>
+
+      <h3>D. Sanity Checks</h3>
+      <p>When you generate G-code, OpenFoamCut automatically performs validation checks on your job configuration. These checks warn you of potential problems before you save the output for machine execution. The check results appear in the panel to the left of the G-Code generation buttons:</p>
+      
+      <ul>
+        <li><b>Outlines fit within foam block</b> — Verifies that both the left and right cutting outlines fit within the foam block dimensions you specified. If an outline extends beyond the foam, you'll need to adjust the outline position, the foam dimensions, or both.</li>
+        
+        <li><b>Wire anchors stay within foam block dimensions</b> — Checks that the wire anchor motion points (entry and exit positions) remain within the foam block. This ensures the wires can physically reach all positions during the cut.</li>
+        
+        <li><b>All anchor points have non-negative coordinates</b> — Validates that anchor points never move into negative X or Y values. Negative coordinates would place the anchors before the machine origin or below the table, which is not physically possible.</li>
+        
+        <li><b>All main and additional lines are properly connected</b> — Ensures there are no isolated "islands" of disconnected geometry in your outline or additional lines. All cut segments must form a single connected path or set of connected components.</li>
+        
+        <li><b>G-Code will cut through all main and additional lines</b> — Verifies that your cut sequence (defined in Tab 2) actually visits and cuts all the line segments you've specified. If additional lines are defined but not reachable from your sync points, this check will alert you.</li>
+        
+        <li><b>Foam dimensions are valid</b> — Confirms that your foam block dimensions (width, depth, height) are all positive numbers. Zero or negative dimensions indicate incomplete setup.</li>
+        
+        <li><b>Outlines are not empty</b> — Checks that both left and right outlines contain actual line segments. Empty outlines suggest a file loading or geometry problem.</li>
+      </ul>
+      
+      <p>All checks must pass before saving G-code. If any check shows a warning or failure, review the message and correct the underlying issue in the appropriate tab (file arrangement, cut order, or machine setup) before generating again.</p>
+
+      <h2>Project Files (.ofc)</h2>
+      <p>OpenFoamCut projects are saved in .ofc format. A project file stores:</p>
+      <ul>
+        <li>Loaded outline file paths and positions</li>
+        <li>Foam block dimensions and positioning</li>
+        <li>Additional geometry and cut order sequence</li>
+        <li>The current application state for quick recovery on restart</li>
+      </ul>
+      <p><b>Note:</b> Machine profiles are saved separately and not included in project files. This allows you to share projects while keeping machine settings specific to each user.</p>
+
+      <h2>Tips and Best Practices</h2>
+      
+      <h3>Profile Validation</h3>
+      <p>When loading a profile file, OpenFoamCut checks that it contains exactly one island (one continuous closed outline). If your file has multiple separate shapes or open paths, the application will reject it with an error message. Ensure your outline files are properly closed and connected.</p>
+
+      <h3>Positioning Workflow</h3>
+      <ol>
+        <li>Load both left and right outlines in Tab 1</li>
+        <li>Set foam block dimensions</li>
+        <li>Adjust outline positions and rotations until the preview shows the correct geometry</li>
+        <li>Set foam positioning offsets for your machine</li>
+        <li>Configure edge angles for any taper or twist</li>
+        <li>Move to Tab 2 and lock the arrangement to prevent accidental changes</li>
+      </ol>
+
+      <h3>Cut Order Configuration</h3>
+      <p>For synchronized cutting, always define sync points on matching features of both outlines. The cut order sequence must start and end at the origin, and you should strategically place sync points so that the machine can follow untraveled paths between them.</p>
+      <p>When designing cut order sequences, remember:</p>
+      <ul>
+        <li>Additional lines from the origin to key outline features (like wing tips) enable efficient routing between distant sync points</li>
+        <li>A well-designed sequence minimizes backtracking by ensuring untraveled paths exist between consecutive sync points</li>
+        <li>If the left and right geometries are very different, you may need multiple sync points to maintain proper wire tension throughout the cut</li>
+        <li>Always verify in the preview that your sync point sequence creates a continuous cutting path</li>
+      </ul>
+
+      <h3>Machine Setup</h3>
+      <p>Create and save profile templates for each machine or cutting style you use. This greatly speeds up project setup for repeated work.</p>
+
+      <h3>Saving Your Work</h3>
+      <p>Use File → Save regularly to preserve your project configuration. The application also automatically saves your session state when you exit, so your work is not lost if the application closes unexpectedly.</p>
+
+      <h2>Additional Information</h2>
+      <p>For more details on DXF and DAT file formats, consult the format documentation for your CAD or profile design software. For machine-specific G-code template help, refer to your CNC machine's programming manual.</p>
+    </td>
+  </tr>
+</table>
+</body>
+</html>
