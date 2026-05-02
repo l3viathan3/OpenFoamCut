@@ -7,6 +7,7 @@ import de.kremerdaniel.openfoamcut.controller.CutOrderController;
 import de.kremerdaniel.openfoamcut.controller.GenerateGCodeController;
 import de.kremerdaniel.openfoamcut.controller.GlobalController;
 import de.kremerdaniel.openfoamcut.controller.MachineConfigController;
+import de.kremerdaniel.openfoamcut.controller.Preview3DController;
 import lombok.Getter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,12 +31,14 @@ public class MainPanel {
     private JPanel cutOrderPanel;
     private JPanel machineSetupPanel;
     private JPanel generateGCodePanel;
+    private JPanel preview3DPanel;
     private JPanel helpPanel;
 
     private ArrangePanel fileSelectionAndArrangePanelParent;
     private CutOrderPanel cutOrderPanelParent;
     private MachinePanel machineSetupPanelParent;
     private GenerateGCodePanel generateGCodePanelParent;
+    private Preview3DPanel preview3DPanelParent;
 
     private void createUIComponents() {
         fileSelectionAndArrangePanelParent = new ArrangePanel();
@@ -46,6 +49,8 @@ public class MainPanel {
         machineSetupPanel = machineSetupPanelParent.getPanel();
         generateGCodePanelParent = new GenerateGCodePanel();
         generateGCodePanel = generateGCodePanelParent.getPanel();
+        preview3DPanelParent = new Preview3DPanel();
+        preview3DPanel = preview3DPanelParent.getPanel();
 
         // HELP PANEL START
 
@@ -79,6 +84,7 @@ public class MainPanel {
         CutOrderController.getInstance(GlobalController.getInstance()).setCutOrderPanel(cutOrderPanelParent);
         MachineConfigController.getInstance().setMachinePanel(machineSetupPanelParent);
         GenerateGCodeController.getInstance().setGCodePanel(generateGCodePanelParent);
+        Preview3DController.getInstance().setPreview3DPanel(preview3DPanelParent);
     }
 
     /**
@@ -113,6 +119,13 @@ public class MainPanel {
         tabbedPane1.addTab("2. Additional Geometry & Cut Order", cutOrderPanel);
         tabbedPane1.addTab("3. Machine Setup", machineSetupPanel);
         tabbedPane1.addTab("4. Generate G-Code", generateGCodePanel);
+        tabbedPane1.addTab("5. 3D Preview", preview3DPanel);
         tabbedPane1.addTab("Help", helpPanel);
+        tabbedPane1.addChangeListener(changeEvent -> {
+            int selectedIndex = tabbedPane1.getSelectedIndex();
+            if (selectedIndex >= 0 && "5. 3D Preview".equals(tabbedPane1.getTitleAt(selectedIndex))) {
+                Preview3DController.getInstance().refreshPreview();
+            }
+        });
     }
 }

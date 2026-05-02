@@ -31,13 +31,13 @@ OpenFoamCut is distributed as a runnable JAR file.
 After downloading a release build, start it with:
 
 ```bash
-java -jar openfoamcut-1.0.jar
+java -jar openfoamcut-1.1.jar
 ```
 
 If you build the project yourself, the packaged JAR is created in `target/`.
 
 ```bash
-java -jar target/openfoamcut-1.0.jar
+java -jar target/openfoamcut-1.1.jar
 ```
 
 ## Supported Input Files
@@ -77,6 +77,11 @@ Add extra lines or shapes and define the cutting sequence.
 Preview the cut path and export G-code for your machine.
 
 ![Generate G-Code](screenshots/tab4.png)
+
+### Tab 5: 3D Preview
+Inspect the generated geometry as a 3D model before exporting or running the job.
+
+![3D Preview](screenshots/tab5.png)
 
 ## In-App Help
 

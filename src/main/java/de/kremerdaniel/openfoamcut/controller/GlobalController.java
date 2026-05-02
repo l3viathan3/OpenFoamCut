@@ -42,6 +42,7 @@ public final class GlobalController {
     private final CutOrderController cutOrderController;
     private final GenerateGCodeController generateGCodeController;
     private final MachineConfigController machineConfigController;
+    private final Preview3DController preview3DController;
 
     // Models
     private final StateManager sm = StateManager.getInstance();
@@ -52,6 +53,7 @@ public final class GlobalController {
         cutOrderController = CutOrderController.getInstance(this);
         generateGCodeController = GenerateGCodeController.getInstance();
         machineConfigController = MachineConfigController.getInstance();
+        preview3DController = Preview3DController.getInstance();
     }
 
 
@@ -65,6 +67,7 @@ public final class GlobalController {
         cutOrderController.refreshGui();
         generateGCodeController.refreshGui();
         machineConfigController.refreshGui();
+        preview3DController.refreshGui();
 
         UserErrorException error = null;
         try {
@@ -139,6 +142,7 @@ public final class GlobalController {
         arrangeController.changeTheme(theme);
         cutOrderController.changeTheme(theme);
         generateGCodeController.changeTheme(theme);
+        preview3DController.changeTheme(theme);
         ThemeManager.setTheme(theme);
     }
 

@@ -29,17 +29,19 @@
   <tr>
     <td>
       <h1>OpenFoamCut User Guide</h1>
+      <p><b>Version:</b> 1.1</p>
       
       <h2>Welcome to OpenFoamCut</h2>
       <p>OpenFoamCut is a desktop application for preparing cutting jobs on 4-axis CNC hot-wire foam cutters. This guide covers the complete workflow from loading profiles to generating G-code for your machine.</p>
       
       <h2>Basic Workflow</h2>
-      <p>The application is organized into four main tabs that guide you through the cutting job preparation:</p>
+      <p>The application is organized into five main tabs that guide you through the cutting job preparation:</p>
       <ol>
         <li><span class="tab-number">1. File Select &amp; Arrange</span> — Load outline files and position them on the foam block</li>
         <li><span class="tab-number">2. Additional Geometry &amp; Cut Order</span> — Define cut sequences and synchronization points</li>
         <li><span class="tab-number">3. Machine Setup</span> — Configure G-code templates and machine profiles</li>
         <li><span class="tab-number">4. Generate G-Code</span> — Create and export the final cutting code</li>
+        <li><span class="tab-number">5. 3D Preview</span> — Inspect the generated shape as a rotatable 3D model</li>
       </ol>
       <p>The <span class="tab-number">Help</span> tab provides this reference guide.</p>
 
@@ -130,14 +132,14 @@
       <h2><span class="tab-number">Tab 2: Additional Geometry &amp; Cut Order</span></h2>
       <p>After arranging your outlines, use this tab to define how the cutting will proceed. You can add additional geometry, define synchronization points between left and right sides, and establish the sequence of the cut.</p>
 
-      <h3>A. Arrange Lock</h3>
+      <h3>Arrange Lock</h3>
       <p>The Lock Arrange checkbox controls access to Tab 1 (File Select &amp; Arrange) while you work on Tab 2. Locking is required before you can generate G-code.</p>
       <ul>
         <li><b>Lock Arrange</b> — After finalizing your outline positions in Tab 1, enable this checkbox. When locked, you <b>cannot</b> change outline files, rotation, or scale. However, you <b>can</b> still move outlines, configure foam settings, and swap outlines. All additional geometry you add (lines, sync points, cut order) will move together with outline adjustments.</li>
       </ul>
       <p><b>Unlocking:</b> If you unlock later, all additional geometry (lines, sync points, and cut order) will be deleted, but you regain the ability to edit outline files, rotation, and scale.</p>
 
-      <h3>B. Additional Geometry</h3>
+      <h3>A. Additional Geometry</h3>
       <p>Add extra lines to your cutting pattern independent of the main outline. This is useful for internal cut paths, reinforcement lines, or guide marks.</p>
 
       <h4>Adding Additional Lines</h4>
@@ -154,7 +156,7 @@
       </ul>
       <p>You can add multiple lines on both the left and right sides. This is useful for creating lead-in paths from the origin point to your main outlines, or for adding internal cut patterns.</p>
 
-      <h3>C. Synchronized Control Points</h3>
+      <h3>B. Synchronized Control Points</h3>
       <p>Synchronization points define where the left and right wire anchors should meet at the same moment. This ensures proper alignment during the cut.</p>
 
       <h4>Adding Synchronization Points</h4>
@@ -171,7 +173,7 @@
         <li><b>Highlighting</b> — When you select a sync point in the list, the corresponding points are highlighted with markers on both the left and right outline displays to help verify your setup</li>
       </ul>
 
-      <h3>D. Cut Order Sequence</h3>
+      <h3>C. Cut Order Sequence</h3>
       <p>Define the order in which synchronized points are reached during the cut. The G-code generator will travel along outlines and additional lines, stopping at each sync point in your cut order sequence.</p>
 
       <h4>Essential Rules for Cut Order</h4>
@@ -200,7 +202,7 @@
             <li>End of airfoil on both sides</li>
           </ul>
         </li>
-        <li><b>Cut Order Sequence:</b> Then in section D, add these sync points to the cut order in this sequence: origin → tip → end → tip → origin
+        <li><b>Cut Order Sequence:</b> Then in section C, add these sync points to the cut order in this sequence: origin → tip → end → tip → origin
           <p>This sequence makes the wire travel: origin to tip (along the additional line), tip to end (along the outline), end back to tip (along the outline via untraveled path), and tip back to origin (along the additional line).</p>
         </li>
       </ul>
@@ -275,6 +277,39 @@
       
       <p>All checks must pass before saving G-code. If any check shows a warning or failure, review the message and correct the underlying issue in the appropriate tab (file arrangement, cut order, or machine setup) before generating again.</p>
 
+      <h2><span class="tab-number">Tab 5: 3D Preview</span></h2>
+      <p>Use this tab to inspect the currently configured cut as a 3D model. When you open the tab, OpenFoamCut regenerates the preview from the current outlines, cut order, and foam dimensions. If the current setup does not produce a valid closed geometry, the tab shows an error message instead of a model.</p>
+
+      <h3>A. What the Preview Shows</h3>
+      <ul>
+        <li><b>Foam block</b> — The foam dimensions and offsets from Tab 1 are shown as a 3D box</li>
+        <li><b>Cut shape</b> — The left and right cut outlines are connected across the foam width to show the resulting part shape</li>
+        <li><b>Machine table</b> — A simple table outline is included to give spatial context for the foam placement</li>
+      </ul>
+      <p>Use this view to confirm the part thickness, taper, and overall orientation before exporting or running the job.</p>
+
+      <h3>B. Geometry Modes</h3>
+      <ul>
+        <li><b>Approximate Mesh</b> — Displays the result as a wireframe mesh between the left and right cut profiles</li>
+        <li><b>Closed Solid</b> — Displays the result as a closed shaded solid so you can inspect the final volume more easily</li>
+      </ul>
+
+      <h3>C. Mesh Step</h3>
+      <p>The <b>Mesh step</b> control adjusts how densely the preview samples the cut geometry.</p>
+      <ul>
+        <li><b>Smaller values</b> — Create a denser mesh with more cross-sections and a more detailed wireframe preview</li>
+        <li><b>Larger values</b> — Reduce the number of sampled sections for a simpler, lighter preview</li>
+      </ul>
+      <p>Changing the mesh step immediately rebuilds the 3D preview using the new sampling distance.</p>
+
+      <h3>D. Mouse Controls</h3>
+      <ul>
+        <li><b>Left mouse drag</b> — Rotate the view</li>
+        <li><b>Mouse wheel</b> — Zoom in and out</li>
+        <li><b>Double-click</b> — Reset the view to the default angle</li>
+      </ul>
+      <p>If the tab reports that no valid geometry is available, return to Tabs 1 through 4 and fix the outlines, sync points, cut order, or other validation issues before reopening the preview.</p>
+
       <h2>Project Files (.ofc)</h2>
       <p>OpenFoamCut projects are saved in .ofc format. A project file stores:</p>
       <ul>
@@ -297,7 +332,7 @@
         <li>Adjust outline positions and rotations until the preview shows the correct geometry</li>
         <li>Set foam positioning offsets for your machine</li>
         <li>Configure edge angles for any taper or twist</li>
-        <li>Move to Tab 2 and lock the arrangement to prevent accidental changes</li>
+        <li>Move to Tab 2 to define additional lines, sync points, and the cut order after locking down Tab 1</li>
       </ol>
 
       <h3>Cut Order Configuration</h3>
@@ -312,6 +347,9 @@
 
       <h3>Machine Setup</h3>
       <p>Create and save profile templates for each machine or cutting style you use. This greatly speeds up project setup for repeated work.</p>
+
+      <h3>3D Verification</h3>
+      <p>Open Tab 5 after your cut setup is complete to verify that the left and right profiles form the expected 3D part. This is especially useful for tapered or twisted wings, where a 2D preview is not enough to catch orientation mistakes.</p>
 
       <h3>Saving Your Work</h3>
       <p>Use File → Save regularly to preserve your project configuration. The application also automatically saves your session state when you exit, so your work is not lost if the application closes unexpectedly.</p>

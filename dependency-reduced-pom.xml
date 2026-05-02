@@ -4,7 +4,7 @@
   <groupId>de.kremerdaniel.openfoamcut</groupId>
   <artifactId>openfoamcut</artifactId>
   <name>OpenFoamCut</name>
-  <version>1.0</version>
+  <version>1.1</version>
   <description>A free and open source GCode geneneration for 4-axis CNC hot wire foam cutters</description>
   <build>
     <plugins>
