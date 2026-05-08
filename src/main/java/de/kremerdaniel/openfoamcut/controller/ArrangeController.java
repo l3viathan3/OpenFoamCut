@@ -1,5 +1,6 @@
 package de.kremerdaniel.openfoamcut.controller;
 
+import de.kremerdaniel.openfoamcut.Logger;
 import de.kremerdaniel.openfoamcut.bo.CutOutline;
 import de.kremerdaniel.openfoamcut.bo.Side;
 import de.kremerdaniel.openfoamcut.gui.ArrangePanel;
@@ -8,9 +9,6 @@ import de.kremerdaniel.openfoamcut.gui.helper.Theme;
 import de.kremerdaniel.openfoamcut.model.RuntimeModelManager;
 import de.kremerdaniel.openfoamcut.model.StateManager;
 import lombok.Setter;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 
 /**
  * Controller for arranging outlines
@@ -18,7 +16,7 @@ import org.slf4j.LoggerFactory;
 @SuppressWarnings("PMD.MissingStaticMethodInNonInstantiatableClass")
 public final class ArrangeController {
 
-    private static final Logger logger = LoggerFactory.getLogger(ArrangeController.class);
+    private static final Logger logger = new Logger(ArrangeController.class);
 
     private static ArrangeController instance;
 

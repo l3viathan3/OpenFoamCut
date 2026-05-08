@@ -2,6 +2,7 @@ package de.kremerdaniel.openfoamcut.controller;
 
 import com.formdev.flatlaf.util.StringUtils;
 
+import de.kremerdaniel.openfoamcut.Logger;
 import de.kremerdaniel.openfoamcut.bo.CutOutline;
 import de.kremerdaniel.openfoamcut.bo.Side;
 import de.kremerdaniel.openfoamcut.bo.UserErrorException;
@@ -11,9 +12,6 @@ import de.kremerdaniel.openfoamcut.model.RuntimeModelManager;
 import de.kremerdaniel.openfoamcut.model.StateManager;
 import de.kremerdaniel.openfoamcut.parser.DatParser;
 import de.kremerdaniel.openfoamcut.parser.DxfParser;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 
 /**
  * Global controller for the application
@@ -23,7 +21,7 @@ public final class GlobalController {
 
     private static GlobalController instance;
 
-    private static final Logger logger = LoggerFactory.getLogger(GlobalController.class);
+    private static final Logger logger = new Logger(GlobalController.class);
 
     /**
      * Gets the singleton instance of GlobalController

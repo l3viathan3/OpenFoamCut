@@ -2,6 +2,7 @@ package de.kremerdaniel.openfoamcut.gui;
 
 import javax.swing.*;
 
+import de.kremerdaniel.openfoamcut.Logger;
 import de.kremerdaniel.openfoamcut.controller.ArrangeController;
 import de.kremerdaniel.openfoamcut.controller.CutOrderController;
 import de.kremerdaniel.openfoamcut.controller.GenerateGCodeController;
@@ -9,8 +10,6 @@ import de.kremerdaniel.openfoamcut.controller.GlobalController;
 import de.kremerdaniel.openfoamcut.controller.MachineConfigController;
 import de.kremerdaniel.openfoamcut.controller.Preview3DController;
 import lombok.Getter;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.awt.*;
 import java.io.IOException;
@@ -21,7 +20,7 @@ import java.net.URL;
  */
 @SuppressWarnings({"PMD.SingularField"})
 public class MainPanel {
-    private static final Logger logger = LoggerFactory.getLogger(MainPanel.class);
+    private static final Logger logger = new Logger(MainPanel.class);
     
     private JTabbedPane tabbedPane1;
 

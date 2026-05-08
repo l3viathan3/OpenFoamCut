@@ -4,14 +4,14 @@ import javax.swing.SwingUtilities;
 
 import com.formdev.flatlaf.FlatDarkLaf;
 import com.formdev.flatlaf.FlatLightLaf;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
+import de.kremerdaniel.openfoamcut.Logger;
 
 /**
  * Manages and switches GUI themes (light/dark)
  */
 public final class ThemeManager {
-    private static final Logger logger = LoggerFactory.getLogger(ThemeManager.class);
+    private static final Logger logger = new Logger(ThemeManager.class);
 
     /**
      * Apply the selected Theme

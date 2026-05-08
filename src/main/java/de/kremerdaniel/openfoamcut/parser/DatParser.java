@@ -11,19 +11,18 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import de.kremerdaniel.openfoamcut.Logger;
 import de.kremerdaniel.openfoamcut.bo.CutOutline;
 import de.kremerdaniel.openfoamcut.bo.Line;
 import de.kremerdaniel.openfoamcut.bo.Point;
 import de.kremerdaniel.openfoamcut.bo.UserErrorException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Can parse .dat files, Selig or Lednicer format
  */
 public final class DatParser {
 
-    private static final Logger logger = LoggerFactory.getLogger(DatParser.class);
+    private static final Logger logger = new Logger(DatParser.class);
 
     private DatParser() {
         // Utility class

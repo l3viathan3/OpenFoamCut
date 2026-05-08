@@ -15,11 +15,10 @@ import org.kabeja.parser.ParseException;
 import org.kabeja.parser.Parser;
 import org.kabeja.parser.ParserBuilder;
 
+import de.kremerdaniel.openfoamcut.Logger;
 import de.kremerdaniel.openfoamcut.bo.CutOutline;
 import de.kremerdaniel.openfoamcut.bo.Line;
 import de.kremerdaniel.openfoamcut.bo.UserErrorException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -39,7 +38,7 @@ import java.util.stream.Collectors;
  */
 public final class DxfParser {
 
-    private static final Logger logger = LoggerFactory.getLogger(DxfParser.class);
+    private static final Logger logger = new Logger(DxfParser.class);
 
     @SuppressWarnings("PMD.LooseCoupling")
     private static final Map<Path, CachedCutOutline> CACHE = new ConcurrentHashMap<>();

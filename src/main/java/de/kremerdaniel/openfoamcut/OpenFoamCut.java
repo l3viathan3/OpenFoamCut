@@ -9,8 +9,6 @@ import de.kremerdaniel.openfoamcut.gui.helper.ThemeManager;
 import de.kremerdaniel.openfoamcut.model.MachineManager;
 import de.kremerdaniel.openfoamcut.model.StateManager;
 import jakarta.xml.bind.JAXBException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
@@ -27,7 +25,7 @@ import javax.swing.WindowConstants;
  */
 public final class OpenFoamCut {
 
-    private static final Logger logger = LoggerFactory.getLogger(OpenFoamCut.class);
+    private static final Logger logger = new Logger(OpenFoamCut.class);
 
     /** The current version string, used in title bar and such */
     public static final String VERSION = "1.1";

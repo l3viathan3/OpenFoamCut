@@ -11,6 +11,7 @@ import java.util.PriorityQueue;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import de.kremerdaniel.openfoamcut.Logger;
 import de.kremerdaniel.openfoamcut.bo.CutOutline;
 import de.kremerdaniel.openfoamcut.bo.Line;
 import de.kremerdaniel.openfoamcut.bo.Point;
@@ -19,8 +20,6 @@ import de.kremerdaniel.openfoamcut.bo.SyncedPoints;
 import de.kremerdaniel.openfoamcut.model.MachineManager;
 import de.kremerdaniel.openfoamcut.model.RuntimeModelManager;
 import de.kremerdaniel.openfoamcut.model.StateManager;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Can generate G-Codes
@@ -28,7 +27,7 @@ import org.slf4j.LoggerFactory;
 @SuppressWarnings("PMD.LooseCoupling")
 public class GCodeConverter {
 
-    private static final Logger logger = LoggerFactory.getLogger(GCodeConverter.class);
+    private static final Logger logger = new Logger(GCodeConverter.class);
 
     StateManager sm = StateManager.getInstance();
     RuntimeModelManager rmm = RuntimeModelManager.getInstance();
