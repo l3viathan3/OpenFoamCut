@@ -7,7 +7,9 @@ import org.kabeja.dxf.DXFDocument;
 import org.kabeja.dxf.DXFEllipse;
 import org.kabeja.dxf.DXFEntity;
 import org.kabeja.dxf.DXFLine;
+import org.kabeja.dxf.DXFPolyline;
 import org.kabeja.dxf.DXFSpline;
+import org.kabeja.dxf.DXFVertex;
 import org.kabeja.dxf.helpers.Point;
 import org.kabeja.dxf.DXFLayer;
 import org.kabeja.parser.DXFParser;
@@ -37,6 +39,8 @@ import java.util.stream.Collectors;
  * DXF loading methods
  */
 public final class DxfParser {
+
+    private static final int POLYLINE_SEGMENTS = 8;
 
     private static final Logger logger = new Logger(DxfParser.class);
 
@@ -93,6 +97,8 @@ public final class DxfParser {
         while (layerIterator.hasNext()) {
             DXFLayer layer = layerIterator.next();
             List<DXFEntity> entities = nullToEmptyList(layer.getDXFEntities(DXFConstants.ENTITY_TYPE_LINE));
+            entities.addAll(nullToEmptyList(layer.getDXFEntities(DXFConstants.ENTITY_TYPE_LWPOLYLINE)));
+            entities.addAll(nullToEmptyList(layer.getDXFEntities(DXFConstants.ENTITY_TYPE_POLYLINE)));
             entities.addAll(nullToEmptyList(layer.getDXFEntities(DXFConstants.ENTITY_TYPE_ARC)));
             entities.addAll(nullToEmptyList(layer.getDXFEntities(DXFConstants.ENTITY_TYPE_CIRCLE)));
             entities.addAll(nullToEmptyList(layer.getDXFEntities(DXFConstants.ENTITY_TYPE_ELLIPSE)));
@@ -101,6 +107,9 @@ public final class DxfParser {
             for (DXFEntity entity : entities) {
                 if (entity instanceof DXFLine) {
                     result.add((DXFLine) entity);
+                } else if (entity instanceof DXFPolyline) {
+                    logger.debug("Polyline");
+                    result.addAll(discretizePolyline((DXFPolyline) entity));
                 } else if (entity instanceof DXFCircle) {
                     logger.debug("Circle");
                     result.addAll(discretizeCircle((DXFCircle) entity, 32));
@@ -191,6 +200,72 @@ public final class DxfParser {
         //return lines;
     }
 
+    private static List<DXFLine> discretizePolyline(DXFPolyline polyline) {
+        List<DXFLine> lines = new ArrayList<>();
+        int vertexCount = polyline.getVertexCount();
+
+        if (isUnsupportedPolyline(polyline, vertexCount)) {
+            return lines;
+        }
+
+        DXFVertex previous = null;
+        DXFVertex first = null;
+
+        for (int index = 0; index < vertexCount; index++) {
+            DXFVertex current = polyline.getVertex(index);
+
+            if (first == null) {
+                first = current;
+            }
+
+            if (previous != null) {
+                appendPolylineSegment(lines, previous, current, POLYLINE_SEGMENTS);
+            }
+
+            previous = current;
+        }
+
+        if (polyline.isClosed() && previous != null && first != null) {
+            appendPolylineSegment(lines, previous, first, POLYLINE_SEGMENTS);
+        }
+
+        try {
+            smoothTransitions(lines, 3);
+        } catch (Exception e) {
+            logger.warn("Failed to smooth polyline transitions", e);
+        }
+
+        return lines;
+    }
+
+    private static boolean isUnsupportedPolyline(DXFPolyline polyline, int vertexCount) {
+        return vertexCount < 2 || polyline.isPolyfaceMesh() || polyline.is3DPolygonMesh();
+    }
+
+    private static void appendPolylineSegment(List<DXFLine> lines, DXFVertex start, DXFVertex end, int segments) {
+        if (start.getBulge() != 0.0d) {
+            logger.warn("Ignoring polyline bulge segment during DXF import");
+        }
+
+        for (int segment = 0; segment < segments; segment++) {
+            double alpha1 = (double) segment / segments;
+            double alpha2 = (double) (segment + 1) / segments;
+
+            DXFLine line = new DXFLine();
+            line.setStartPoint(interpolateVertex(start, end, alpha1));
+            line.setEndPoint(interpolateVertex(start, end, alpha2));
+            lines.add(line);
+        }
+    }
+
+    private static Point interpolateVertex(DXFVertex start, DXFVertex end, double alpha) {
+        return new Point(
+                start.getX() * (1 - alpha) + end.getX() * alpha,
+                start.getY() * (1 - alpha) + end.getY() * alpha,
+                start.getZ() * (1 - alpha) + end.getZ() * alpha
+        );
+    }
+
     /**
      * Takes a flat list of small DXFLine segments and smooths the transitions/junctions between them.
      * 
@@ -201,27 +276,46 @@ public final class DxfParser {
      * Higher n = smoother (but slightly more rounded) transitions.
      */
     private static void smoothTransitions(List<DXFLine> originalLines, int n) {
+        smoothTransitions(originalLines, n, n);
+    }
+
+    private static void smoothTransitions(List<DXFLine> originalLines, int n, int edgeMargin) {
         if (originalLines.size() < n * 2 || n < 1) {          // need at least a few lines to smooth
             return;
         }
 
-        // For all lines starting with nth line
-        for (int i = n; i < originalLines.size() - n; i++) {
+        double[] startXs = new double[originalLines.size()];
+        double[] startYs = new double[originalLines.size()];
+        double[] endXs = new double[originalLines.size()];
+        double[] endYs = new double[originalLines.size()];
+
+        for (int i = 0; i < originalLines.size(); i++) {
+            DXFLine line = originalLines.get(i);
+            startXs[i] = line.getStartPoint().getX();
+            startYs[i] = line.getStartPoint().getY();
+            endXs[i] = line.getEndPoint().getX();
+            endYs[i] = line.getEndPoint().getY();
+        }
+
+        int startIndex = Math.max(n, edgeMargin);
+        int endIndex = originalLines.size() - Math.max(n, edgeMargin);
+
+        for (int i = startIndex; i < endIndex; i++) {
 
             DXFLine actual = originalLines.get(i);
             DXFLine before = originalLines.get(i - 1);
             DXFLine after = originalLines.get(i + 1);
 
-            double backSumX = actual.getStartPoint().getX();
-            double backSumY = actual.getStartPoint().getY();
-            double forwardSumX = actual.getEndPoint().getX();
-            double forwardSumY = actual.getEndPoint().getY();
+            double backSumX = startXs[i];
+            double backSumY = startYs[i];
+            double forwardSumX = endXs[i];
+            double forwardSumY = endYs[i];
 
             for(int j = 1; j <= n; j++) {
-                backSumX += originalLines.get(i - j).getStartPoint().getX();
-                backSumY += originalLines.get(i - j).getStartPoint().getY();
-                forwardSumX += originalLines.get(i + j).getEndPoint().getX();
-                forwardSumY += originalLines.get(i + j).getEndPoint().getY();
+                backSumX += startXs[i - j];
+                backSumY += startYs[i - j];
+                forwardSumX += endXs[i + j];
+                forwardSumY += endYs[i + j];
             }
             int count = n + 1;
             before.getEndPoint().setX(backSumX / count);

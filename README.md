@@ -31,13 +31,13 @@ OpenFoamCut is distributed as a runnable JAR file.
 After downloading a release build, start it with:
 
 ```bash
-java -jar openfoamcut-1.1.jar
+java -jar openfoamcut-1.1.1.jar
 ```
 
 If you build the project yourself, the packaged JAR is created in `target/`.
 
 ```bash
-java -jar target/openfoamcut-1.1.jar
+java -jar target/openfoamcut-1.1.1.jar
 ```
 
 ## Supported Input Files
